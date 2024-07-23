@@ -1,0 +1,114 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Country Flags</title>
+    <link rel="shortcut icon" href="Favicon/image.png" type="image/x-icon">
+    <style>
+        body {
+            font-family:Arial, Helvetica, sans-serif;
+            background-color: rgb(255, 255, 239);
+            padding: 0px;
+        }
+
+        .container {
+            max-width: 800px;
+            margin: 0px auto;
+            text-align: center;
+        }
+
+        .search-box {
+            margin-bottom: 2rem;
+        }
+
+        #searchInput {
+            height: 2rem;
+            width: 14rem;
+        }
+
+        .flag-grid {
+            display: grid;
+            grid-template-columns: repeat(4, 1fr);
+            grid-gap: 10px;
+            justify-items: center;
+        }
+
+        .flag-img {
+            max-width: 200px;
+            border-radius: 4px;
+        }
+    </style>
+    <link rel="stylesheet" href="style.css">
+</head>
+<body>
+    <div class="container">
+        <h1>Country Flag</h1>
+        <div class="search-box">
+            <input type="text" id="searchInput" oninput="onInputFlag(event)" placeholder="Search for a country...">
+        </div>
+        <div class="flag-grid" id="flagContainer">
+            <!-- <div>
+                <img class="flag-img" src="https://flagcdn.com/w320/th.png" alt="thailand">
+                <div>Name</div>
+            </div>
+            <div>
+                <img class="flag-img" src="https://flagcdn.com/w320/th.png" alt="thailand">
+                <div>Name</div>
+            </div>
+            <div>
+                <img class="flag-img" src="https://flagcdn.com/w320/th.png" alt="thailand">
+                <div>Name</div>
+            </div>
+            <div>
+                <img class="flag-img" src="https://flagcdn.com/w320/th.png" alt="thailand">
+                <div>Name</div>
+            </div>
+            <div>
+                <img class="flag-img" src="https://flagcdn.com/w320/th.png" alt="thailand">
+                <div>Name</div>
+            </div> -->
+        </div>
+    </div>
+    <script>
+        // const searchInputDOM = document.getElementById('searchInput');
+        const flagContainer = document.getElementById('flagContainer');
+        const urlFlag = "https://restcountries.com/v3.1/all";
+        let arrFlagData = [];
+
+        fetch(urlFlag)
+        .then(response => {
+            return response.json();
+        })
+        .then(data => {
+            // console.log("data =>",data);
+            displayFlag(data);
+            arrFlagData = data;
+        })
+
+        function displayFlag(countries) {
+            countries.forEach((country) => {
+                const element = `
+                    <div>
+                        <img class="flag-img" src=${country.flags.svg} alt=${country.flags.alt}>
+                        <div class="flag-name">${country.name.common}</div>
+                    </div>`
+
+                    flagContainer.innerHTML = flagContainer.innerHTML + element;
+            });
+        }
+
+        function onInputFlag(event) {
+            const search = event.target.value.toLowerCase();
+
+            flagContainer.innerHTML = "";
+            const filteredCountries = arrFlagData.filter((country) => {
+                return country.name.common.toLowerCase().includes(search);
+            })
+            // console.log("search =>",search);
+            // console.log("filteredCountries =>", filteredCountries);
+            displayFlag(filteredCountries);
+        }
+    </script>
+</body>
+</html>
